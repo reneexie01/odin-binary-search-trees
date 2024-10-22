@@ -15,15 +15,15 @@ class Tree {
 }
 
 function buildTree(array, start, end) {
-    let newArray = cleanArray(array)
+
     if (start > end) return null;
 
     let mid = start + Math.floor((end - start) / 2);
 
-    let root = new Node(newArray[mid]);
+    let root = new Node(array[mid]);
 
-    root.left = buildTree(newArray, start, mid - 1);
-    root.right = buildTree(newArray, mid + 1, end);
+    root.left = buildTree(array, start, mid - 1);
+    root.right = buildTree(array, mid + 1, end);
 
     return root;
 }
@@ -88,6 +88,11 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
  
-  const example = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+const example = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
-  console.log(cleanArray(example))
+const cleanedExample = cleanArray(example);
+
+console.log(cleanedExample)
+const root = buildTree(cleanedExample, 0, cleanedExample.length - 1)
+console.log(root)
+console.log(prettyPrint(root));
