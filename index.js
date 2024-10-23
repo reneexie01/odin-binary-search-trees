@@ -14,6 +14,8 @@ class Tree {
     }
 }
 
+/* Functions to build the tree */
+
 function buildTree(array, start, end) {
 
     if (start > end) return null;
@@ -88,11 +90,32 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
  
+function insert(root, key) {
+    if (root === null) {
+        return new Node(key)
+    }
+
+    if (root.data === key) {
+        return root;
+    }
+
+    if (key < root.data) {
+        root.left = insert(root.left, key);
+    } else if (key > root.data) {
+        root.right = insert(root.right, key);
+    }
+    return root; 
+}
+
+
 const example = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 const cleanedExample = cleanArray(example);
 
 console.log(cleanedExample)
-const root = buildTree(cleanedExample, 0, cleanedExample.length - 1)
+let root = buildTree(cleanedExample, 0, cleanedExample.length - 1)
 console.log(root)
-console.log(prettyPrint(root));
+prettyPrint(root);
+
+root = insert(root, 10)
+prettyPrint(root);
