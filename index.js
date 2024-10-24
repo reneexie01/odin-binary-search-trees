@@ -21,7 +21,6 @@ function buildTree(array, start, end) {
     if (start > end) return null;
 
     let mid = start + Math.floor((end - start) / 2);
-
     let root = new Node(array[mid]);
 
     root.left = buildTree(array, start, mid - 1);
@@ -92,21 +91,52 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
  
 function insert(root, key) {
     if (root === null) {
-        return new Node(key)
+        return new Node(key);
     }
 
     if (root.data === key) {
         return root;
     }
 
-    if (key < root.data) {
-        root.left = insert(root.left, key);
-    } else if (key > root.data) {
-        root.right = insert(root.right, key);
+    if (root.data > key) {
+        root.left = insert(root.left, key)
+    } else if (root.data < key) {
+        root.right = insert(root.right, key)
     }
-    return root; 
+
+    return root;
 }
 
+function remove(root, key) {
+    if (root === null) {
+        return root;
+    }
+
+    if (root.data > key) {
+        root.left = remove(root.left, key)
+    } else if (root.data < key) {
+        root.right = remove(root.right, key)
+    } else { // This is when root.data === key
+        if (root.left === null) {
+            return root.right;
+        }
+        if (root.right === null) {
+            return root.left;
+        }
+        let successor = getSuccessor(root)
+        root.data = successor.data
+        root.right = remove(root.right, successor.data)
+    }
+    return root;
+}
+
+function getSuccessor(current) {
+    current = current.right;
+    while (current !== null && current.left !== null) {
+        current = current.left;
+    }
+    return current;
+}
 
 const example = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
@@ -117,5 +147,8 @@ let root = buildTree(cleanedExample, 0, cleanedExample.length - 1)
 console.log(root)
 prettyPrint(root);
 
-root = insert(root, 10)
+insert(root, 10);
+prettyPrint(root);
+
+remove(root, 67);
 prettyPrint(root);
