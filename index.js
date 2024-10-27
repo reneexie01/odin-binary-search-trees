@@ -138,6 +138,21 @@ function getSuccessor(current) {
     return current;
 }
 
+function find(root, value) {
+    if (root === null) {
+        return root;
+    }
+
+    if (root.data > value) {
+        return root.left = find(root.left, value);
+    } else if (root.data < value) {
+        return root.right = find(root.right, value)
+    } else {
+        return root;
+    }
+}
+
+
 const example = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 const cleanedExample = cleanArray(example);
@@ -152,3 +167,5 @@ prettyPrint(root);
 
 remove(root, 67);
 prettyPrint(root);
+
+console.log(find(root, 10));
