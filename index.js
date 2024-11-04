@@ -1,5 +1,3 @@
-/* Classes */
-
 class Node {
     constructor(data) {
         this.data = data;
@@ -9,73 +7,121 @@ class Node {
 }
 
 class Tree {
-    constructor(array) {
-        this.root = buildTree(array);
+    constructor(arr) {
+        this.root = buildTree(arr);
     }
 }
 
-/* Functions to build the tree */
+function buildTree(arr) {
+    return buildTreeRecursion(arr, 0, (arr.length - 1));
+}
 
-function buildTree(array, start, end) {
-
+function buildTreeRecursion(arr, start, end) {
     if (start > end) return null;
 
     let mid = start + Math.floor((end - start) / 2);
-    let root = new Node(array[mid]);
 
-    root.left = buildTree(array, start, mid - 1);
-    root.right = buildTree(array, mid + 1, end);
+    let root = new Node(arr[mid]);
+
+    root.left = buildTreeRecursion(arr, start, mid - 1);
+    root.right = buildTreeRecursion(arr, mid + 1, end)
 
     return root;
 }
 
-function cleanArray(array) {
-   const sortedArray = mergeSort(array);
-   const uniqueSortedArray = removeDuplicates(sortedArray);
-   return uniqueSortedArray;
+function insertion(root, key) {
+    if (root === null) {
+        return new Node(key);
+    }
+
+    if (root.data === key) {
+        return root;
+    }
+
+    if (root.data > key) {
+        root.left = insertion(root.left, key);
+    } else if (root.data < key) {
+        root.right = insertion(root.right, key);
+    }
+
+    return root;
 }
 
-function merge(left, right) {
-    let sortedArray = [];
+function deletion(root, key) {
+    if (root === null) {
+        return root;
+    }
 
-    while (left.length && right.length) {
-        if (left[0] < right[0]) {
-            sortedArray.push(left.shift());
-        } else {
-            sortedArray.push(right.shift())
+    if (root.data > key) {
+        root.left = deletion(root.left, key);
+    } else if (root.data < key) {
+        root.right = deletion(root.right, key);
+    } else { // When root.data === key
+        if (root.left === null) {
+            return root.right;
+        }
+        if (root.right === null) {
+            return root.left;
+        }
+
+        let successor = getSuccessor(root);
+        root.data = successor.data;
+        root.right = deletion(root.right, successor.data);
+    }
+    return root;
+}
+
+function getSuccessor(node) {
+    node = node.right;
+    while (node !== null && node.left !== null) {
+        node = node.left;
+    }
+    return node;
+}
+
+function find(root, value) {
+    if (root === null || root.data === value) return root;
+
+    if (root.data > value) {
+        return find(root.left, value);
+    }
+
+    if (root.data < value) {
+        return find(root.right, value);
+    }
+}
+
+function levelOrder(root, callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function');
+    }
+
+    if (root === null) return;
+
+    const queue = [];
+
+    queue.push(root);
+
+    while (queue.length > 0) {
+        const node = queue.shift();
+        logger(node);
+
+        if (node.left !== null) {
+            queue.push(node.left);
+        }
+
+        if (node.right !== null) {
+            queue.push(node.right);
         }
     }
 
-    return [...sortedArray, ...left, ...right]
 }
 
-function removeDuplicates(array) {
-    let hashmap = {};
-    let newArray = [];
-
-    for (let i = 0; i < array.length; i++) {
-        let element = array[i];
-
-        if (!hashmap[element]) {
-            hashmap[element] = true;
-            newArray.push(element)
-        }
-    }
-
-    return newArray;
+function logger(item) {
+    console.log(item);
 }
 
-function mergeSort(array) {
-    if (array.length <= 1) return array;
-
-    let mid = Math.floor(array.length / 2);
-
-    let left = mergeSort(array.slice(0, mid))
-    let right = mergeSort(array.slice(mid))
-
-    return merge(left, right)
-}
-
+/* BST visualiser */
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
@@ -88,84 +134,65 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
       prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
     }
   };
- 
-function insert(root, key) {
-    if (root === null) {
-        return new Node(key);
-    }
 
-    if (root.data === key) {
-        return root;
-    }
+/* Sorting and removing duplicates */ 
+function merge(left, right) {
+    let sortedArr = [];
 
-    if (root.data > key) {
-        root.left = insert(root.left, key)
-    } else if (root.data < key) {
-        root.right = insert(root.right, key)
-    }
-
-    return root;
-}
-
-function remove(root, key) {
-    if (root === null) {
-        return root;
-    }
-
-    if (root.data > key) {
-        root.left = remove(root.left, key)
-    } else if (root.data < key) {
-        root.right = remove(root.right, key)
-    } else { // This is when root.data === key
-        if (root.left === null) {
-            return root.right;
+    while (left.length && right.length) {
+        if (left[0] < right[0]) {
+            sortedArr.push(left.shift());
+        } else {
+            sortedArr.push(right.shift());
         }
-        if (root.right === null) {
-            return root.left;
+    }
+    return [...sortedArr, ...left, ...right]
+}
+
+function mergeSort(arr) {
+    if (arr.length <= 1) return arr;
+
+    let mid = Math.floor(arr.length / 2);
+
+    let left = mergeSort(arr.slice(0, mid));
+    let right = mergeSort(arr.slice(mid))
+
+    return merge(left, right);
+}
+
+
+function sortedUniqueArray(arr) {
+    const sortedArray = mergeSort(arr);
+    const newSet = new Set(sortedArray);
+    const newArray = [...newSet]
+    return newArray;
+}
+
+/* Alternate method of getting unique elements from array
+function removeDuplicates(arr) {
+    let hashmap = {};
+    let uniqueArr = [];
+
+    for (let i = 0; i < arr.length; i++) {
+        let element = arr[i];
+
+        if (!hashmap[element]) {
+            hashmap[element] = true;
+            uniqueArr.push(element);
         }
-        let successor = getSuccessor(root)
-        root.data = successor.data
-        root.right = remove(root.right, successor.data)
     }
-    return root;
+
+    return uniqueArr;
 }
+*/
 
-function getSuccessor(current) {
-    current = current.right;
-    while (current !== null && current.left !== null) {
-        current = current.left;
-    }
-    return current;
-}
+const example = mergeSort([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 
-function find(root, value) {
-    if (root === null) {
-        return root;
-    }
+const exampleUniqueSorted = sortedUniqueArray(example)
+console.log(exampleUniqueSorted);
 
-    if (root.data > value) {
-        return root.left = find(root.left, value);
-    } else if (root.data < value) {
-        return root.right = find(root.right, value)
-    } else {
-        return root;
-    }
-}
+const bst = buildTree(exampleUniqueSorted);
 
+prettyPrint(bst)
 
-const example = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-
-const cleanedExample = cleanArray(example);
-
-console.log(cleanedExample)
-let root = buildTree(cleanedExample, 0, cleanedExample.length - 1)
-console.log(root)
-prettyPrint(root);
-
-insert(root, 10);
-prettyPrint(root);
-
-remove(root, 67);
-prettyPrint(root);
-
-console.log(find(root, 10));
+levelOrder(bst, logger);
