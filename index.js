@@ -104,7 +104,7 @@ function levelOrder(root, callback) {
 
     while (queue.length > 0) {
         const node = queue.shift();
-        logger(node);
+        callback(node);
 
         if (node.left !== null) {
             queue.push(node.left);
@@ -115,6 +115,18 @@ function levelOrder(root, callback) {
         }
     }
 
+}
+
+function inOrder(root, callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function');
+    }
+
+    if (root === null) return;
+
+    inOrder(root.left, callback);
+    callback(root);
+    inOrder(root.right, callback);
 }
 
 function logger(item) {
@@ -189,10 +201,12 @@ function removeDuplicates(arr) {
 const example = mergeSort([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 
 const exampleUniqueSorted = sortedUniqueArray(example)
-console.log(exampleUniqueSorted);
+//console.log(exampleUniqueSorted);
 
 const bst = buildTree(exampleUniqueSorted);
 
 prettyPrint(bst)
 
-levelOrder(bst, logger);
+//levelOrder(bst, logger);
+inOrder(bst, logger)
+
