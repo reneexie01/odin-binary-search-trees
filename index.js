@@ -172,6 +172,22 @@ function height(root) {
     }
 }
 
+function depth(root, node) {
+    if (root === null) return null;
+
+    if (root.data === node) return 1;
+
+    if (root.data > node) {
+        let counter = depth(root.left, node);
+        return counter + 1;
+    }
+
+    if (root.data < node) {
+        let counter = depth(root.right, node);
+        return counter + 1;
+    }
+}
+
 /* BST visualiser */
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -249,4 +265,4 @@ prettyPrint(bst)
 //levelOrder(bst, logger);
 console.log(height(bst))
 
-height(bst)
+console.log(depth(bst, 6345))
