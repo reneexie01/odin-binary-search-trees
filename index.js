@@ -133,6 +133,31 @@ function logger(item) {
     console.log(item);
 }
 
+function postOrder(root, callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function');
+    }
+    
+    if (root === null) return;
+
+    postOrder(root.left, callback);
+    postOrder(root.right, callback);
+    callback(root);
+}
+
+function preOrder(root, callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function');
+    }
+    
+    if (root === null) return;
+
+    callback(root);
+    preOrder(root.left, callback);
+    preOrder(root.right, callback);
+
+}
+
 /* BST visualiser */
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -208,5 +233,5 @@ const bst = buildTree(exampleUniqueSorted);
 prettyPrint(bst)
 
 //levelOrder(bst, logger);
-inOrder(bst, logger)
+preOrder(bst, logger)
 
