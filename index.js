@@ -188,6 +188,19 @@ function depth(root, node) {
     }
 }
 
+function isBalanced(root) {
+    if (root === null) {
+        return true;
+    }
+    
+    let leftRoot = height(root.left);
+    let rightRoot = height(root.right);
+
+    const difference = Math.abs(leftRoot - rightRoot);
+    return (difference > 1) ? false : true;
+    
+}
+
 /* BST visualiser */
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -266,3 +279,4 @@ prettyPrint(bst)
 console.log(height(bst))
 
 console.log(depth(bst, 6345))
+console.log(isBalanced(bst))
