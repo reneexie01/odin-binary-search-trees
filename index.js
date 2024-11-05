@@ -201,6 +201,21 @@ function isBalanced(root) {
     
 }
 
+function rebalance(root) {
+    let array = inOrderArray(root);
+    return buildTree(array);
+}
+
+function inOrderArray(root, arr = []) {
+    if (root === null) return null;
+
+    inOrderArray(root.left, arr)
+    arr.push(root.data);
+    inOrderArray(root.right, arr);
+
+    return arr;
+}
+
 /* BST visualiser */
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -280,3 +295,18 @@ console.log(height(bst))
 
 console.log(depth(bst, 6345))
 console.log(isBalanced(bst))
+
+console.log(inOrderArray(bst));
+
+let root1 = new Node(1);
+root1.right = new Node(2);
+root1.right.right = new Node(3);
+root1.right.right.right = new Node(4);
+root1.right.right.right.right = new Node(5);
+root1.right.right.right.right.right = new Node(6);
+root1.right.right.right.right.right.right = new Node(7);
+prettyPrint(root1)
+
+let rebalancedRoot1 = rebalance(root1);
+
+prettyPrint(rebalancedRoot1);
