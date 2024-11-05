@@ -158,6 +158,20 @@ function preOrder(root, callback) {
 
 }
 
+function height(root) {
+    if (root === null) {
+        return 0;
+    } else {
+        let rootLeft = height(root.left);
+        let rootRight = height(root.right);
+        if (rootLeft > rootRight) {
+            return rootLeft + 1;
+        } else {
+            return rootRight + 1;
+        }
+    }
+}
+
 /* BST visualiser */
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -233,5 +247,6 @@ const bst = buildTree(exampleUniqueSorted);
 prettyPrint(bst)
 
 //levelOrder(bst, logger);
-preOrder(bst, logger)
+console.log(height(bst))
 
+height(bst)
