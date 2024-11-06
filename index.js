@@ -203,6 +203,7 @@ function isBalanced(root) {
 
 function rebalance(root) {
     let array = inOrderArray(root);
+    console.log(array)
     return buildTree(array);
 }
 
@@ -281,32 +282,63 @@ function removeDuplicates(arr) {
 }
 */
 
-const example = mergeSort([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 
-const exampleUniqueSorted = sortedUniqueArray(example)
-//console.log(exampleUniqueSorted);
 
-const bst = buildTree(exampleUniqueSorted);
+// 1. Create a binary search tree from an array of random numbers < 100. You can create a function that returns an array of random numbers every time you call it if you wish.
 
-prettyPrint(bst)
+Math.floor(Math.random() * 100);
 
-//levelOrder(bst, logger);
-console.log(height(bst))
+function createNewArray() {
+    let array = [];
+    while (array.length < 11) {
+        const number = Math.floor(Math.random() * 100);
+        array.push(number);
+    }
+    return array;
+}
 
-console.log(depth(bst, 6345))
-console.log(isBalanced(bst))
+const newArray = createNewArray();
+const sortedArray = sortedUniqueArray(newArray)
 
-console.log(inOrderArray(bst));
+const newTree = buildTree(sortedArray);
+prettyPrint(newTree);
 
-let root1 = new Node(1);
-root1.right = new Node(2);
-root1.right.right = new Node(3);
-root1.right.right.right = new Node(4);
-root1.right.right.right.right = new Node(5);
-root1.right.right.right.right.right = new Node(6);
-root1.right.right.right.right.right.right = new Node(7);
-prettyPrint(root1)
+// 2. Confirm that the tree is balanced by calling isBalanced.
 
-let rebalancedRoot1 = rebalance(root1);
+console.log(isBalanced(newTree));
 
-prettyPrint(rebalancedRoot1);
+// 3. Print out all elements in level, pre, post, and in order.
+
+// levelOrder(newTree, logger);
+// preOrder(newTree, logger);
+// postOrder(newTree, logger);
+ inOrder(newTree, logger)
+
+ // 4. Unbalance the tree by adding several numbers > 100.
+
+ newTree.right.right.right = new Node(101);
+ newTree.right.right.right.right = new Node(102);
+ newTree.right.right.right.right.right = new Node(103);
+ newTree.right.right.right.right.right.right = new Node(104);
+ 
+ prettyPrint(newTree)
+
+ // 5. Confirm that the tree is unbalanced by calling isBalanced.
+
+ console.log(isBalanced(newTree));
+
+ // 6. Balance the tree by calling rebalance.
+
+ const rebalancedTree = rebalance(newTree);
+ prettyPrint(rebalancedTree);
+
+ // 7. Confirm that the tree is balanced by calling isBalanced.
+
+ console.log(isBalanced(rebalancedTree));
+
+ // 8. Print out all elements in level, pre, post, and in order.
+
+ // levelOrder(rebalancedTree, logger);
+ // preOrder(rebalancedTree, logger);
+ // postOrder(rebalancedTree, logger);
+ inOrder(rebalancedTree, logger);
